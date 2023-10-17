@@ -1,26 +1,24 @@
 
 
-
-// Import modules 
-const favicon = require('serve-favicon'); 
-const express = require('express') 
-const app = express() 
-  
-// Returns a middleware to serve favicon 
-app.use(favicon(__dirname + '/favicon.ico')); 
+const http = require('http');
+var path = require('path');
+var fs = require('fs');
 
 
+// Location of your favicon in the filesystem.
+var FAVICON = path.join(__dirname, 'public', 'favicon.ico');
 
-const http = require('http')
 let requestsCount = 0;
 
 const server = http.createServer((request, response) => {
-
+   
     requestsCount++
-
+    
     switch(request.url) {
-
-        case "/" : 
+        case '/favicon.ico' : 
+        response.setHeader('Content-Type', 'image/x-icon');
+        fs.createReadStream(FAVICON).pipe(response);
+        return;
         case "/students" :
         response.write("Students"); break;
         case "/courses":
@@ -33,3 +31,5 @@ const server = http.createServer((request, response) => {
 })
 
 server.listen(3003)
+
+
