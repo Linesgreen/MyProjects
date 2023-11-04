@@ -26,6 +26,7 @@ const HTTP_STATUSES = {
 app.get('/', (req, res) => {
     res.json('BIBOS');
 });
+
 app.get('/courses', (req, res) => {
     let foundCourses = db.courses;
     if (req.query.title) {
@@ -45,14 +46,16 @@ app.get('/courses/:id', (req, res) => { // Исправлено здесь
     res.json( foundCourses)
 });
 app.post('/courses', (req, res) => {
-    if(!req.body.title) {
+    const title = req.body.title.match(/\w+ ?\w/gi).join("")
+    console.log(title);
+    if(!title) {
         res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400)
         return;
     }
 
     const newCourse = {
         id: +(new Date()),
-        title: req.body.title
+        title: title
     };
 
     db.courses.push(newCourse)
